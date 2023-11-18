@@ -109,7 +109,8 @@ class PDAProcessor:
 
         for i in lst1:
             str1+=i+" "
-            str2=str1[:-2]
+            str2=str1[:-1]
+        self.language = str2
 
     def run(self): # read file path in command line
         if len(sys.argv) != 3:
@@ -150,6 +151,8 @@ class PDAProcessor:
         self.language = language_with_tags
         if (len(self.language) != 0):
             self.string_to_one_line() # jika ingin file dalam one line
+        with open("./data/html_in_text.txt","w") as f:
+            f.write(self.language)
 
         self.read_file_pda(path_to_text)
         print(self.language)
