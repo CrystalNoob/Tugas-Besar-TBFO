@@ -157,7 +157,7 @@ def remove_content(html_arr):
 
 
 # Example usage
-html_content = """<html><head><title>My Title</title><meta charset="utf-8"></head><body><h1>Hello World!</h1><p>This is a paragraph.</p>hello</body></html>"""
+html_content = """<html><head>hello<title>My Title</title><meta charset="utf-8"></head><body><h1>Hello World!</h1><p>This is a paragraph.</p>hello</body></html>"""
 soup = BeautifulSoup(html_content, 'html.parser')
 
 head_tag = soup.head
