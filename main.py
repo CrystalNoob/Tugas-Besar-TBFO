@@ -97,6 +97,7 @@ class PDAProcessor:
     def check(self):
         if self.state_found:
             print("Diterima")
+            print(self.productions)
         else:
             print("Tidak diterima")
 
@@ -167,8 +168,7 @@ class PDAProcessor:
 
     def transform_html_to_txt(self):
         available_tags = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th"]
-        symbols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O','P','Q','V', 'W', 'X', 'Y', 'Z']
-
+        symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'v', 'w', 'x', 'y', 'z']
         # for i in range(len(available_tags)):
         #     print(f"{available_tags[i]} : {symbols[i]}")
 
@@ -176,15 +176,18 @@ class PDAProcessor:
         tags_void_without_attribute = ["br","hr"]
 
         available_tags_with_attribute = ["link","script","a","img","button","form","input"]
-        attribute = [["rel", "href"] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
+        attribute = [["rel", "href",] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
 
-        symbols_tags_with_attribute = ["","R",'S', "",'T','U', ""]
+        symbols_tags_with_attribute = ["","r",'s', "",'t','u', ""]
         
         text_temp = self.language
-        text_temp = remove_content_tag(text_temp)
+        # text_temp = remove_content_tag(text_temp)
         for i in range(len(available_tags)):
             text_temp = replace_html_tags_with_letter(text_temp,symbols[i],available_tags[i])
 
+        for i in range(len(available_tags_with_attribute)):
+            text_temp = replace_tags_with_attribute(text_temp,available_tags_with_attribute[i],attribute,symbols_tags_with_attribute[i])
+        
         for i in range(len(available_tags_with_attribute)):
             for name in attribute[i]:
                 text_temp = replace_tags_with_attribute(text_temp,available_tags_with_attribute[i],name,symbols_tags_with_attribute[i])

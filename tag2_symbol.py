@@ -1,5 +1,6 @@
 
 
+from bs4 import BeautifulSoup
 import re
 # html : A
 # head : B
@@ -39,33 +40,34 @@ def replace_html_tags_with_letter(html_code, replacement_letter,tag_name):
 
     return modified_html
 
+def replace_html_tag_all(html_tag):
+    available_tags = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th"]
+    symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'v', 'w', 'x', 'y', 'z']
+    tags_void_without_attribute = ["br","hr"]
+    available_tags_with_attribute = ["link","script","a","img","button","form","input"]
+    attribute = [["rel", "href",] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
+    symbols_tags_with_attribute = ["","r",'s', "",'t','u', ""]
 
 
-
-# for k in range(len(available_tags_with_attribute)):
-#     print(f"{available_tags_with_attribute[k]}")
-# print(available_tags_with_attribute)
-
-
-# # Read HTML code from a text file
-# with open('./data/html_in_text.txt', 'r') as file:
-#     html_code = file.read()
-
-# # Specify the letter to replace HTML tags
-# replacement_letter = 'H'  # Change this to your desired letter
-
-# # Call the function to replace HTML tags
-# modified_html = replace_html_tags_with_letter(html_code, replacement_letter,"html")
-
-# # Print or save the modified HTML code
-# print(modified_html)
-
-
+    for i in range(available_tags):
+        if available_tags[i] in html_tag:
+            return symbols[i]
+        
+    for k in range(tags_void_without_attribute):
+        if tags_void_without_attribute[k] in html_tag:
+            return ""
+    
+    for j in range(len(available_tags_with_attribute)):
+        if available_tags_with_attribute[j] in html_tag:
+            return symbols_tags_with_attribute[j]
+            
 
 
 def replace_tags_with_attribute(html_code, tag_name, attribute_name, replacement_letter):
     # Define a regular expression pattern to match the specified tag with the attribute
-    pattern = re.compile(fr'<{tag_name}\s+{attribute_name}=".*?".*?>')
+    pattern_string = '<{tag_name}\s+{attribute_name}=".*?".*?>'
+    pattern = re.compile(fr'')
+    
 
     # Replace the specified tags with the specified letter
     modified_html = re.sub(pattern, replacement_letter, html_code)
@@ -84,24 +86,7 @@ def remove_content_tag(html_content):
     print(cleaned_html)
     return cleaned_html
 
-# # Read HTML code from a text file
-# with open('./data/html_in_text.txt', 'r') as file:
-#     html_code = file.read()
 
-# # Specify the tag name, attribute name, and the letter to replace the tags
-# tag_name = 'html'  # Change this to your desired tag name
-# attribute_name = 'lang'  # Change this to your desired attribute name
-# replacement_letter = 'X'  # Change this to your desired letter
-
-# # Call the function to replace tags with the specified attribute
-# modified_html = replace_tags_with_attribute(html_code, tag_name, attribute_name, replacement_letter)
-
-# # Print or save the modified HTML code
-# print(modified_html)
-
-
-from bs4 import BeautifulSoup
-import re
 
 def remove_content_except_head(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -120,11 +105,6 @@ def is_html_tag(tag):
     match = pattern.match(tag)
     return bool(match)
     
-    # Use the pattern to match the tag
-    match = pattern.match(tag)
-    
-    # Return True if it's a match, otherwise False
-    return bool(match)
 
 def is_void_element(tag):
     # Define a regular expression pattern for void HTML elements
@@ -137,7 +117,7 @@ def is_void_element(tag):
     return bool(match)
 
 def remove_content(html_arr):
-    not_allowed_text_in_tags = ["<head>","<html>","<body>","<div>","<table>","<link .*?>",]
+    not_allowed_text_in_tags = ["<head>","<html>","<body>","<div>","<table>",r"<link.*?>",]
     parent_tags = ["<body>","<head>","<html>",]
 
 
@@ -147,7 +127,7 @@ def remove_content(html_arr):
         if is_html_tag(html_arr[i]):
             initial_tag = html_arr[i]
         else:
-            if initial_tag in not_allowed_text_in_tags or initial_tag[0:2] =='</'  :
+            if (initial_tag in not_allowed_text_in_tags or initial_tag[0:2] =='</'  or initial_tag == '')and html_arr[i] != ' ' :
                 html_arr[i] = "<"
             else:
                 html_arr[i] = ""
@@ -155,22 +135,132 @@ def remove_content(html_arr):
     return html_arr
 
 
+def remove_space(tag):
+    tag = re.sub(r'\s+', ' ', tag) # replace with single space
+    tag = re.sub(r'\s*=\s*', '=', tag) # handle equals
+    return tag
+
+def remove_space_in_string(html_string):
+    
+    html_string = re.sub(r'<[^>]+>', lambda match: remove_space(match.group()), html_string)
+    return html_string
+
+def get_attributes(html_string):
+    tag_pattern = r"<(\w+)([^>]*)>"
+    attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\""
+    matches = re.finditer(tag_pattern, html_string)
+    return_values = []
+    need_values = ["type","method"]
+    
+    for match in matches:
+        tag_name = match.group(1)
+        attributes = match.group(2)
+        print(f"name = {tag_name}")
+
+        # print("StartTag:", tag_name)
+
+        for attr_match in re.finditer(attr_pattern, attributes):
+            attr_name = attr_match.group(1) or attr_match.group(3)
+            attr_value = attr_match.group(2) or attr_match.group(4)
+            if (attr_name in need_values):
+                return_values.append((tag_name,attr_name,attr_value))
+            else:
+                return_values.append((tag_name,attr_name))
+        
+    return return_values
+
+def check_if_valid(token):
+    valid_attributes = {
+        "html":[],
+        "img":[("img","")]
+    }
+
+
+
+    global_attributes = [ "id", "class", "style"]
+    globa_tag_names = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th","br","hr","link","script","a","img","button","form","input"]
+
+
+    available_tags = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th"]
+    symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'v', 'w', 'x', 'y', 'z']
+
+    tags_void_without_attribute = ["br","hr"]
+    available_tags_with_attribute = ["link","script","a","img","button","form","input"]
+    attribute = [["rel", "href",] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
+    symbols_tags_with_attribute = ["","r",'s', "",'t','u', ""]
+
+
+    delimiter = "="
+    pattern = f"({re.escape(delimiter)})"
+    result = re.split(pattern, token)
+    if len(result) != 1:
+        print("disini 1")
+        arr_sub = token.split(" ")
+        print(arr_sub)
+        for sub_section in arr_sub[1:]:
+            if "=" not in sub_section:
+                return False
+        
+        #checking for its attribtues
+        attribute_values = get_attributes(token)
+
+        print(attribute_values)
+        is_correct = True
+        if (len(attribute_values) == 0):
+            return False
+        for attribute in attribute_values:
+            if (attribute[1] in global_attributes):
+                pass
+            else:
+                if attribute in valid_attributes[attribute[0]]:
+                    print("kesini")
+                    pass
+                else:
+                    return False
+        return True
+
+
+    else:
+        seperate_by_space = token.split(" ")
+        print(seperate_by_space)
+        if (len(seperate_by_space) != 1):
+            return False
+        else:
+            
+            pattern = r"<(\w+)>"
+            match = re.search(pattern, token)
+            if match.group(1) in globa_tag_names:
+                return True
+            else:
+                False
+
+    # attributes = get_attributes(token)
+    # if ()
+
+
+
+def tokenization(html_content):
+    tokens = remove_space_in_string(html_content)
+    tokens = tokens.replace(" >", ">")
+    tokens = re.findall(r'<[^>]+>|[^<]+', tokens)
+    tokens = remove_content(tokens)
+    return tokens
+
+    for token in tokens:
+        pass
 
 # Example usage
-html_content = """<html><head>hello<title>My Title</title><meta charset="utf-8"></head><body><h1>Hello World!</h1><p>This is a paragraph.</p>hello</body></html>"""
-soup = BeautifulSoup(html_content, 'html.parser')
+html_content = """asfasd<html> <p>asdasdasd</p><head> <title>My Title</title><meta charset="utf-8"></head><body><h1>Hello World!</h1><p>This is a paragraph.</p><link>hello</body></html>"""
 
-head_tag = soup.head
+token = tokenization(html_content)
+print(token[5])
+print(get_attributes("</p>"))
+# # print(get_attributes(token[1]))
+# print(check_if_valid(token[1]))
+    
 
-# k  = remove_content_tag(html_content)
 
-html_string = "<html>scsdasd</html>"
 
-# Use regular expression to find all HTML tags
-
-tokens = re.findall(r'<[^>]+>|[^<]+', html_content)
-
-print(remove_content(tokens))
 
 
 # def checking(arr):
