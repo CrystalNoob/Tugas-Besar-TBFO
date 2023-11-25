@@ -54,20 +54,66 @@ class PDAProcessor:
 
         return moves
 
-    def isAccepted(self,state,language,stack,config):
-        total_in_stack = 0
+    # def isAccepted(self,state,language,stack,config):
+    #     total_in_stack = 0
+
+    #     if self.state_found:
+    #         return 0
+    #     if self.accpet_by_empty(state,language,stack):
+    #         self.state_found = 1
+    #         return 1
+    #     total_curr_move = self.get_moves(state, language, stack)
+    #     if (total_curr_move == 0 ):
+    #         return 0
+    #     for move in total_curr_move:
+    #         total_in_stack += self.isAccepted(move[0], move[1], move[2], config + [(move[0], move[1], move[2])])
+    #     return total_in_stack
+
+    def display_state(self, state, language, stack):
+        print(f"Current State: {state}, Remaining Input: {language}, Stack: {stack}")
+
+    # def isAccepted(self, state, language, stack, config):
+    #     self.display_state(state, language, stack)  # Display current state
+
+    #     if self.state_found:
+    #         return 0
+    #     if self.accpet_by_empty(state, language, stack):
+    #         self.state_found = 1
+    #         return 1
+
+    #     total_curr_move = self.get_moves(state, language, stack)
+    #     if total_curr_move == 0:
+    #         print(f"Failed at State: {state} with Input: {language} and Stack: {stack}")
+    #         return 0
+
+    #     total_in_stack = 0
+    #     for move in total_curr_move:
+    #         total_in_stack += self.isAccepted(move[0], move[1], move[2], config + [(move[0], move[1], move[2])])
+
+    #     if total_in_stack == 0:
+    #         print(f"Failed to find a valid move from State: {state} with Input: {language} and Stack: {stack}")
+    #     return total_in_stack
+
+    def isAccepted(self, state, language, stack, config):
+        self.display_state(state, language, stack)  # Display current state
 
         if self.state_found:
-            return 0
-        if self.accpet_by_empty(state,language,stack):
+            return False
+        if self.accpet_by_empty(state, language, stack):
             self.state_found = 1
-            return 1
-        total_curr_move = self.get_moves(state, language, stack)
-        if (total_curr_move == 0 ):
-            return 0
-        for move in total_curr_move:
-            total_in_stack += self.isAccepted(move[0], move[1], move[2], config + [(move[0], move[1], move[2])])
-        return total_in_stack
+            return True
+
+        possible_moves = self.get_moves(state, language, stack)
+        if not possible_moves:
+            print(f"Failed at State: {state} with Input: {language} and Stack: {stack}")
+            return False
+
+        for move in possible_moves:
+            if not self.isAccepted(move[0], move[1], move[2], config + [(move[0], move[1], move[2])]):
+                # As soon as one path fails, return False to indicate the language is not accepted
+                return False
+
+        return False  # If all paths fail, return False
 
     def read_file_pda(self,file_path):
         try:
