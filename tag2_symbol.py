@@ -225,7 +225,11 @@ def tokenization(html_content):
 
 def extract_tag_info(html_tag):
     html_tag = squish_value(html_tag)
-    print(html_tag)
+    # print(html_tag)
+    # <!---->
+    if (len(html_tag) >= 7):
+        if (html_tag[0:4] == "<!--" and html_tag[len(html_tag)-3:] == "-->"):
+            return ['CMT'] 
     pattern = r'<\s*([^/!\s>]+)(?:\s*([^>]*))?\s*>'
     matches = re.match(pattern, html_tag)
     #[['class', '']]  ada equals no value
@@ -297,7 +301,6 @@ def extract_tag_info(html_tag):
                     else:
                         hasil.extend([attribute[0]])
                 
-            hasil.extend([">"])
             return hasil
         else:
             return ["TEXT"]

@@ -94,7 +94,6 @@ class PDAProcessor:
     def check(self):
         if self.state_found:
             print("Diterima")
-            print(self.productions)
         else:
             print("Tidak diterima")
 
@@ -156,6 +155,7 @@ class PDAProcessor:
         # print(self.language)
         self.language = tokenization(self.language)
         print(self.language)
+        # self.language = ['head','head','head','head','head','head']
         # self.language = ['TEXT','TEXT']
         # print(self.language)
         # self.transform_html_to_txt()

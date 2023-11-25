@@ -1,12 +1,10 @@
 q0 q1 q2
-html id = TEXT class style > head
-Z a 1 4 2 3 A b B d
+html id = TEXT class style > head title /title
+Z a 1 4 2 3 A b B d D S
 q0
 Z
-q2
+q3
 F
-
-
 q0 html Z q1 aZ
 q1 id a q1 1a
 q1 = 1 q1 2
@@ -18,7 +16,6 @@ q1 style a q1 1a
 q1 = 1 q1 2
 q1 TEXT 2 q1 e
 q1 > a q1 A
-====
 q1 head A q2 bA
 q2 id b q1 1b
 q2 = 1 q1 2
@@ -41,5 +38,5 @@ q2 style d q2 1d
 q2 = 1 q2 2
 q2 TEXT 2 q2 e
 q2 > d q2 D
-q2 TEXT H q2 e
-q2 /title d q2 D
+q2 TEXT D q2 D
+q2 /title D q3 D

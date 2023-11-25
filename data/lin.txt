@@ -1,0 +1,30 @@
+q0 q1 q2 q4
+html id = TEXT class style > head title /title link
+Z a 1 4 2 3 A b B d D S Z a 1 4 2 3 A b B d D S
+q2
+D
+q4
+F
+q2 link D q3 w
+q3 id w q3 1w
+q3 = 1 q3 2
+q3 TEXT 2 q3 e
+q3 class 1 q3 1w
+q3 = 1 q3 2
+q3 TEXT 2 q3 e
+q3 style w q3 1w
+q3 = 1 q3 2
+q3 TEXT 2 q3 e
+q3 href w q3 1w
+q3 = 1 q3 2
+q3 TEXT 2 q2 e
+q2 id w q2 1w
+q2 = 1 q2 2
+q2 TEXT 2 q2 e
+q2 class w q2 1w
+q2 = 1 q2 2
+q2 TEXT 2 q2 e
+q2 style w q2 1w
+q2 = 1 q2 2
+q2 TEXT 2 q2 e
+q2 > w q4 W
