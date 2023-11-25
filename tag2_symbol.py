@@ -155,29 +155,29 @@ def remove_space_in_string(html_string):
     html_string = re.sub(r'<[^>]+>', lambda match: remove_space(match.group()), html_string)
     return html_string
 
-def get_attributes(html_string):
-    tag_pattern = r"<(\w+)([^>]*)>"
-    # attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\""
-    # attr_pattern  =r'(\w+)=(\'[^\']*\'|"[^"]*")'
-    attr_pattern = r'(\w+)=(\'[^\']*\'|"[^"]*"|[^\s>]+)'
-    matches = re.finditer(tag_pattern, html_string)
-    return_values = []
-    need_values = ["type","method","class","id","sty"]
+# def get_attributes(html_string):
+#     tag_pattern = r"<(\w+)([^>]*)>"
+#     # attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\""
+#     # attr_pattern  =r'(\w+)=(\'[^\']*\'|"[^"]*")'
+#     attr_pattern = r'(\w+)=(\'[^\']*\'|"[^"]*"|[^\s>]+)'
+#     matches = re.finditer(tag_pattern, html_string)
+#     return_values = []
+#     need_values = ["type","method","class","id","sty"]
     
-    for match in matches:
-        tag_name = match.group(1)
-        attributes = match.group(2)
-        print(f"name = {tag_name}")
+#     for match in matches:
+#         tag_name = match.group(1)
+#         attributes = match.group(2)
+#         print(f"name = {tag_name}")
 
-        # print("StartTag:", tag_name)
+#         # print("StartTag:", tag_name)
 
-        for attr_match in re.finditer(attr_pattern, attributes):
-            attr_name = attr_match.group(1) or attr_match.group(3)
-            attr_value = attr_match.group(2) or attr_match.group(4)
-            if (attr_name in need_values):
-                return_values.append((tag_name,attr_name,attr_value))
-            else:
-                return_values.append((tag_name,attr_name))
+#         for attr_match in re.finditer(attr_pattern, attributes):
+#             attr_name = attr_match.group(1) or attr_match.group(3)
+#             attr_value = attr_match.group(2) or attr_match.group(4)
+#             if (attr_name in need_values):
+#                 return_values.append((tag_name,attr_name,attr_value))
+#             else:
+#                 return_values.append((tag_name,attr_name))
 
 
 def get_attributes(html_string):
@@ -230,7 +230,7 @@ def extract_tag_info(html_tag):
     if (len(html_tag) >= 7):
         if (html_tag[0:4] == "<!--" and html_tag[len(html_tag)-3:] == "-->"):
             return ['CMT'] 
-    pattern = r'<\s*([^/!\s>]+)(?:\s*([^>]*))?\s*>'
+    pattern = r'<([^/!\s>]+)(?:\s*([^>]*))?\s*>'
     matches = re.match(pattern, html_tag)
     #[['class', '']]  ada equals no value
     #['class'] no equels
@@ -270,7 +270,7 @@ def extract_tag_info(html_tag):
         hasil.extend([">"])
         return hasil
     else:
-        pattern = r'</\s*([^/!\s>]+)(?:\s*([^>]*))?\s*>'
+        pattern = r'</([^/!\s>]+)(?:\s*([^>]*))?\s*>'
         matches = re.match(pattern, html_tag)
         if matches:
             tag_name = matches.group(1)
