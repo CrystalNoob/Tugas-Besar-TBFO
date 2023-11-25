@@ -31,35 +31,35 @@ import re
 # form : U
 # input :
 
-def replace_html_tags_with_letter(html_code, replacement_letter,tag_name):
-    # Define a regular expression pattern to match HTML tags
-    pattern = re.compile(f'<{tag_name}>')
+# def replace_html_tags_with_letter(html_code, replacement_letter,tag_name):
+#     # Define a regular expression pattern to match HTML tags
+#     pattern = re.compile(f'<{tag_name}>')
 
-    # Replace all HTML tags with the specified letter
-    modified_html = re.sub(pattern, replacement_letter, html_code)
+#     # Replace all HTML tags with the specified letter
+#     modified_html = re.sub(pattern, replacement_letter, html_code)
 
-    return modified_html
+#     return modified_html
 
-def replace_html_tag_all(html_tag):
-    available_tags = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th"]
-    symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'v', 'w', 'x', 'y', 'z']
-    tags_void_without_attribute = ["br","hr"]
-    available_tags_with_attribute = ["link","script","a","img","button","form","input"]
-    attribute = [["rel", "href",] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
-    symbols_tags_with_attribute = ["","r",'s', "",'t','u', ""]
+# def replace_html_tag_all(html_tag):
+#     available_tags = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th"]
+#     symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'v', 'w', 'x', 'y', 'z']
+#     tags_void_without_attribute = ["br","hr"]
+#     available_tags_with_attribute = ["link","script","a","img","button","form","input"]
+#     attribute = [["rel", "href",] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
+#     symbols_tags_with_attribute = ["","r",'s', "",'t','u', ""]
 
 
-    for i in range(available_tags):
-        if available_tags[i] in html_tag:
-            return symbols[i]
+#     for i in range(available_tags):
+#         if available_tags[i] in html_tag:
+#             return symbols[i]
         
-    for k in range(tags_void_without_attribute):
-        if tags_void_without_attribute[k] in html_tag:
-            return ""
+#     for k in range(tags_void_without_attribute):
+#         if tags_void_without_attribute[k] in html_tag:
+#             return ""
     
-    for j in range(len(available_tags_with_attribute)):
-        if available_tags_with_attribute[j] in html_tag:
-            return symbols_tags_with_attribute[j]
+#     for j in range(len(available_tags_with_attribute)):
+#         if available_tags_with_attribute[j] in html_tag:
+#             return symbols_tags_with_attribute[j]
             
 
 
@@ -86,6 +86,16 @@ def remove_content_tag(html_content):
     print(cleaned_html)
     return cleaned_html
 
+
+def squish_space(match):
+    return f'{match.group(1)}="{match.group(2)}"'.replace(" ", "")
+
+
+def squish_value(html_code):
+    # print(html_code)
+    pattern = r'(\w+)="([^"]*)"'
+    modified_html = re.sub(pattern, squish_space, html_code)
+    return modified_html
 
 
 def remove_content_except_head(html_content):
@@ -169,106 +179,119 @@ def get_attributes(html_string):
         
     return return_values
 
-def check_if_valid(token):
-    valid_attributes = {
-        "html":[],
-        "img":[("img","")]
-    }
-
-
-
-    global_attributes = [ "id", "class", "style"]
-    globa_tag_names = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th","br","hr","link","script","a","img","button","form","input"]
-
-
-    available_tags = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th"]
-    symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'v', 'w', 'x', 'y', 'z']
-
-    tags_void_without_attribute = ["br","hr"]
-    available_tags_with_attribute = ["link","script","a","img","button","form","input"]
-    attribute = [["rel", "href",] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
-    symbols_tags_with_attribute = ["","r",'s', "",'t','u', ""]
-
-
-    delimiter = "="
-    pattern = f"({re.escape(delimiter)})"
-    result = re.split(pattern, token)
-    if len(result) != 1:
-        print("disini 1")
-        arr_sub = token.split(" ")
-        print(arr_sub)
-        for sub_section in arr_sub[1:]:
-            if "=" not in sub_section:
-                return False
-        
-        #checking for its attribtues
-        attribute_values = get_attributes(token)
-
-        print(attribute_values)
-        is_correct = True
-        if (len(attribute_values) == 0):
-            return False
-        for attribute in attribute_values:
-            if (attribute[1] in global_attributes):
-                pass
-            else:
-                if attribute in valid_attributes[attribute[0]]:
-                    print("kesini")
-                    pass
-                else:
-                    return False
-        return True
-
-
-    else:
-        seperate_by_space = token.split(" ")
-        print(seperate_by_space)
-        if (len(seperate_by_space) != 1):
-            return False
-        else:
-            
-            pattern = r"<(\w+)>"
-            match = re.search(pattern, token)
-            if match.group(1) in globa_tag_names:
-                return True
-            else:
-                False
-
-    # attributes = get_attributes(token)
-    # if ()
 
 
 
 def tokenization(html_content):
     tokens = remove_space_in_string(html_content)
+    # print(tokens)
+    final_tokens = []
+    final_result = []
+    
     tokens = tokens.replace(" >", ">")
     tokens = re.findall(r'<[^>]+>|[^<]+', tokens)
-    tokens = remove_content(tokens)
-    return tokens
-
-    for token in tokens:
-        pass
-
-# Example usage
-html_content = """asfasd<html> <p>asdasdasd</p><head> <title>My Title</title><meta charset="utf-8"></head><body><h1>Hello World!</h1><p>This is a paragraph.</p><link>hello</body></html>"""
-
-token = tokenization(html_content)
-print(token[5])
-print(get_attributes("</p>"))
-# # print(get_attributes(token[1]))
-# print(check_if_valid(token[1]))
     
+    for token in tokens:
+        if (token != ""  and not (token.isspace())):
+            final_tokens.append(token)
+    # tokens = remove_content(tokens)
+    for token in final_tokens:
+        final_result.extend(extract_tag_info(token))
+    return final_result
 
 
 
+def extract_tag_info(html_tag):
+    html_tag = squish_value(html_tag)
+    print(html_tag)
+    pattern = r'<\s*([^/!\s>]+)(?:\s*([^>]*))?\s*>'
+    matches = re.match(pattern, html_tag)
+    #[['class', '']]  ada equals no value
+    #['class'] no equels
 
-
-# def checking(arr):
-#     for i in arr:
-#         if (is_void_element(i)):
-#             print(i)
+    
+    if matches:
+        tag_name = matches.group(1)
+        attributes = matches.group(2) if matches.group(2) else ""
+        # print(attributes)
+        # print(attributes.split)
+        attributes = attributes.split(" ")
+        # print(attributes)
+        new_attributes = []
+        for att in attributes:
+            att = att.split("=")
+            new_attributes.append(att)
+        
+        # print(new_attributes)
+        hasil = [tag_name]
+        # print(hasil)
+        if (new_attributes[0] != ['']):
+            for attribute in new_attributes:
+                if len(attribute) >= 2:
+                    if attribute[1] == '':
+                        hasil.extend([attribute[0],"="])
+                    else:
+                        if (attribute[0] != "type" and attribute[0] != "method"):
+                            hasil.extend([attribute[0],"=","TEXT"])
+                        else:
+                            hasil.extend([attribute[0],"=",attribute[1]])
+                else:
+                    hasil.extend([attribute[0]])
+        hasil.append(">")
+        return hasil
+    else:
+        pattern = r'</\s*([^/!\s>]+)(?:\s*([^>]*))?\s*>'
+        matches = re.match(pattern, html_tag)
+        if matches:
+            tag_name = matches.group(1)
+            attributes = matches.group(2) if matches.group(2) else ""
+            attributes = attributes.split(" ")
+            # print(attributes)
+            new_attributes = []
+            for att in attributes:
+                att = att.split("=")
+                new_attributes.append(att)
+            
+            # print(new_attributes)
+            hasil = ["/"+tag_name]
+            # print(hasil)
+            if (new_attributes[0] != ['']):
+                for attribute in new_attributes:
+                    if len(attribute) >= 2:
+                        if attribute[1] == '':
+                            hasil.extend([attribute[0],"="])
+                        else:
+                            if (attribute[0] != "type" and attribute[0] != "method"):
+                                hasil.extend([attribute[0],"=","TEXT"])
+                            else:
+                                hasil.extend([attribute[0],"=",attribute[1]])
+                    else:
+                        hasil.extend([attribute[0]])
+                
+            hasil.append(">")
+            return hasil
+        else:
+            return ["TEXT"]
         
 
 
-# checking(tokens)
+# Example usage
+# html_content = """<br/>"""
 
+# token = tokenization(html_content)
+# print(token)
+# hasil = []
+# for t in token:
+#     k = extract_tag_info(t)
+#     hasil.extend(k)
+# print(hasil)
+
+
+# def is_all_spaces(input_str):
+#     return input_str.isspace()
+
+# input_string = "    "
+# if is_all_spaces(input_string):
+#     print("The string consists of only spaces.")
+# else:
+#     print("The string contains characters other than spaces.")

@@ -1,0 +1,10 @@
+Q0 Q1 Q2
+head
+Z
+Q0
+Z
+Q2
+F 
+Q0 e Z Q1 Z
+Q1 head Z Q2 Z
+Q2 head Z Q1 Z

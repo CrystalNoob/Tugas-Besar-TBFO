@@ -46,11 +46,21 @@ def normalize_html_tag(tag):
     tag = re.sub(r'\s+', ' ', tag)
     # Ensure no space before and one space after '=' in attributes
     tag = re.sub(r'\s*=\s*', '=', tag)
+
+    if tag[len(tag)-2] == " ":
+        tag = tag[0:len(tag)-2] + ">"
     return tag
 
-html_string = "<p     class =                'kontol'     ></p>, <div id=        \"\"></div>"
 
-html_string = re.sub(r'<[^>]+>', lambda match: normalize_html_tag(match.group()), html_string)
+def normalize_html_string(html_content):
+    html_content= re.sub(r'<[^>]+>', lambda match: normalize_html_tag(match.group()),html_string )
+    
+    return html_content
+
+html_string = "<p     class =                'kontol'       ></p> <div id=        \"\"></div>"
+html_string = normalize_html_string(html_string)
+
+print(html_string)
 
 tag_pattern = r"<(\w+)([^>]*)>"
 attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\""

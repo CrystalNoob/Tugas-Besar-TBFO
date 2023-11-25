@@ -16,11 +16,8 @@ class PDAProcessor:
         self.type_accept = ""
         self.productions = {}
 
-    
-    # def change_html_to_txt(self):
-
     def accpet_by_empty(self,state,language, stack):
-        if language != "":
+        if len(language) != 0:
             return 0
         elif (self.type_accept == "E"):
             return len(stack) < 1 # language sudah kosong dan stack sudah kosong
@@ -146,61 +143,23 @@ class PDAProcessor:
 
         with open(path_to_html, 'r', encoding='utf-8') as html_file:
             html_content = html_file.read()
-        
-        # h = html2text.HTML2Text()
-        # language = h.handle(html_content)
-
-        # # language_prettified = language.prettify()
-        # language_with_tags = language
 
         self.language = html_content
         if (len(self.language) != 0):
             self.string_to_one_line() # jika ingin file dalam one line
-        with open("./data/html_in_text.txt","w") as f:
-            f.write(self.language)
+        # with open("./data/html_in_text.txt","w") as f:
+        #     f.write(self.language)
+
 
         self.read_file_pda(path_to_text)
+        # print(self.language)
+        # print(self.language)
+        self.language = tokenization(self.language)
         print(self.language)
-        self.transform_html_to_txt()
+        # print(self.language)
+        # self.transform_html_to_txt()
         self.isAccepted(self.start_state,self.language,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
         self.check()
-
-
-    def transform_html_to_txt(self):
-        available_tags = ["html","head","body","title", "h1","h2","h3","h4","h5","h6","p","em","b","abbr","strong","small","div","table","tr","td","th"]
-        symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'v', 'w', 'x', 'y', 'z']
-        # for i in range(len(available_tags)):
-        #     print(f"{available_tags[i]} : {symbols[i]}")
-
-
-        tags_void_without_attribute = ["br","hr"]
-
-        available_tags_with_attribute = ["link","script","a","img","button","form","input"]
-        attribute = [["rel", "href",] ,["src"] ,["href"], ["src","alt"],["type"],["action","method"],["type"]]
-
-        symbols_tags_with_attribute = ["","r",'s', "",'t','u', ""]
-        
-        text_temp = self.language
-        # text_temp = remove_content_tag(text_temp)
-        for i in range(len(available_tags)):
-            text_temp = replace_html_tags_with_letter(text_temp,symbols[i],available_tags[i])
-
-        for i in range(len(available_tags_with_attribute)):
-            text_temp = replace_tags_with_attribute(text_temp,available_tags_with_attribute[i],attribute,symbols_tags_with_attribute[i])
-        
-        for i in range(len(available_tags_with_attribute)):
-            for name in attribute[i]:
-                text_temp = replace_tags_with_attribute(text_temp,available_tags_with_attribute[i],name,symbols_tags_with_attribute[i])
-
-        
-        with open('./data/html_symbols.txt','w') as f:
-            f.write(text_temp)
-
-
-
-
-   
-
 
 k = PDAProcessor()
 k.run()
