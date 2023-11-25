@@ -157,10 +157,12 @@ def remove_space_in_string(html_string):
 
 def get_attributes(html_string):
     tag_pattern = r"<(\w+)([^>]*)>"
-    attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\""
+    # attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\""
+    # attr_pattern  =r'(\w+)=(\'[^\']*\'|"[^"]*")'
+    attr_pattern = r'(\w+)=(\'[^\']*\'|"[^"]*"|[^\s>]+)'
     matches = re.finditer(tag_pattern, html_string)
     return_values = []
-    need_values = ["type","method"]
+    need_values = ["type","method","class","id","sty"]
     
     for match in matches:
         tag_name = match.group(1)
@@ -176,8 +178,28 @@ def get_attributes(html_string):
                 return_values.append((tag_name,attr_name,attr_value))
             else:
                 return_values.append((tag_name,attr_name))
-        
+
+
+def get_attributes(html_string):
+    tag_pattern = r"<(\w+)([^>]*)>"
+    attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\"" 
+    matches = re.finditer(tag_pattern, html_string)
+    return_values = []
+
+    for match in matches:
+        tag_name = match.group(1)
+        attributes = match.group(2)
+
+        for attr_match in re.finditer(attr_pattern, attributes):
+            attr_name = attr_match.group(1)
+            attr_value = attr_match.group(2).strip('\'"') if attr_match.group(2) else None
+
+            return_values.append((tag_name, attr_name, attr_value))
+    print(return_values)
+
     return return_values
+        
+    # return return_values
 
 
 
@@ -232,11 +254,16 @@ def extract_tag_info(html_tag):
                         hasil.extend([attribute[0],"="])
                     else:
                         if (attribute[0] != "type" and attribute[0] != "method"):
-                            hasil.extend([attribute[0],"=","TEXT"])
+                            # hasil.extend([attribute[0],"=","TEXT"])
+                            if (attribute[1][0] == attribute[1][len(attribute[1]) - 1]):
+                                hasil.extend([attribute[0],"=","TEXT"])
+                            else:
+                                hasil.extend([attribute[0],"=",attribute[1]])
                         else:
                             hasil.extend([attribute[0],"=",attribute[1]])
                 else:
                     hasil.extend([attribute[0]])
+        hasil.extend([">"])
         return hasil
     else:
         pattern = r'</\s*([^/!\s>]+)(?:\s*([^>]*))?\s*>'
@@ -261,13 +288,16 @@ def extract_tag_info(html_tag):
                             hasil.extend([attribute[0],"="])
                         else:
                             if (attribute[0] != "type" and attribute[0] != "method"):
-                                hasil.extend([attribute[0],"=","TEXT"])
+                                if (attribute[1][0] == attribute[1][len(attribute[1]) - 1]):
+                                    hasil.extend([attribute[0],"=","TEXT"])
+                                else:
+                                    hasil.extend([attribute[0],"=",attribute[1]])
                             else:
                                 hasil.extend([attribute[0],"=",attribute[1]])
                     else:
                         hasil.extend([attribute[0]])
                 
-            
+            hasil.extend([">"])
             return hasil
         else:
             return ["TEXT"]

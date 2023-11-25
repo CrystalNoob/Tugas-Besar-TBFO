@@ -156,8 +156,10 @@ class PDAProcessor:
         # print(self.language)
         self.language = tokenization(self.language)
         print(self.language)
+        # self.language = ['TEXT','TEXT']
         # print(self.language)
         # self.transform_html_to_txt()
+        print(self.productions)
         self.isAccepted(self.start_state,self.language,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
         self.check()
 
