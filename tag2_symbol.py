@@ -237,7 +237,6 @@ def extract_tag_info(html_tag):
                             hasil.extend([attribute[0],"=",attribute[1]])
                 else:
                     hasil.extend([attribute[0]])
-        hasil.append(">")
         return hasil
     else:
         pattern = r'</\s*([^/!\s>]+)(?:\s*([^>]*))?\s*>'
@@ -268,7 +267,7 @@ def extract_tag_info(html_tag):
                     else:
                         hasil.extend([attribute[0]])
                 
-            hasil.append(">")
+            
             return hasil
         else:
             return ["TEXT"]
