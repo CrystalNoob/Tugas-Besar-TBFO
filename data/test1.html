@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>Algeo02-22061</title>
+    <link rel="stylesheet" href="../static/result_style.css">
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="../static/resultScript.js"></script>
+    <div id="loading" style="display: none">
+        <img src="../static/assets/kuru2.gif" alt="Loading">
+    </div>
+    <div class="title">
+        <h1>ALGEO LENS</h1>
+    </div>
+    <div class="menu-bar">
+        <a href="/aboutus.html">About Us</a>
+        <a href="/howtouse.html">How to Use</a>
+        <a href="/searchengineconcept.html">Search Engine Concept"</a>
+    </div>
+    <div class="main-container">
+        <div class="left">
+            <div class="item-box">
+                <div class="item-image">
+                    <img src="/static/image_upload/{{ single_file_name }}" alt="Image">
+                    
+                    <form action="/" method="POST">
+                        <div class="side-div-top">
+                        </div>
+                        <h3>Upload Image</h3>
+                    </form>
+
+                    <form id="uploadDatasetForm">
+                        <h3>Upload Dataset</h3>
+                        <br>
+                    </form>
+
+                    <form action="{{ url_for('download_pdf') }}" method="POST">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="runtime">
+                <p>{{ total_images }} Results in {{ runtime }} seconds with {{ functionUsed }}</p>
+            </div>
+            <div class="item-box">
+                <div class="item-image">
+                    <img src="/static/dataset/{{ item.path }}" alt="Image {{ item.path }}">
+                    <p>{{ item.similarity }}</p>
+                </div>
+            </div>
+            <div class="pagination">
+                <a href="{{ url_for('result', page=1) }}">First</a>
+                <a href="{{ url_for('result', page=(current_page-1) if current_page  1 else 1) }}">Prev</a>
+                
+                <a href="{{ url_for('result', page=page_num) }}">{{ page_num }}</a>
+                
+                <a href="{{ url_for('result', page=(current_page+1) if current_page  total_pages else total_pages) }}">Next</a>
+                <a href="{{ url_for('result', page=total_pages) }}">Last</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
