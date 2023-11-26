@@ -209,10 +209,10 @@ class PDAProcessor:
             sys.exit(1)
 
         if os.path.exists(path_to_data + sys.argv[2]):
-            if (sys.argv[2].endswith(('.html'))):
+            if (sys.argv[2].endswith(('.html')) or sys.argv[2].endswith(('.txt'))):
                 path_to_html = path_to_data + sys.argv[2]
             else:
-                print("File is not html")
+                print(f"File {sys.argv[2]} is neither a html file or txt file")
                 sys.exit(1)
         else:
             print("File doesn't exist")
