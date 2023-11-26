@@ -146,8 +146,16 @@ class PDAProcessor:
                 
             print_with_color(self.each_line[self.curr_line-1],91)
             print()
-            for line in self.each_line[self.curr_line:]:
-                print(line)
+            if (len(self.each_line[self.curr_line:]) > 5):
+                for line in self.each_line[self.curr_line:self.curr_line+4]:
+                    print(line)
+                print("......")
+            else:
+                for line in self.each_line[self.curr_line:]:
+                    print(line)
+            print()
+
+            
             
         elif (self.current_state == []):
 

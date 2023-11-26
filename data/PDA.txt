@@ -76,7 +76,7 @@ q3 href w q3 1w
 q3 > w q3 e
 q3 link N qlink wN
 q3 link U qlink wN
-q3 script C q3 x
+q3 script C q3 xC
 q3 id x q3 1x
 q3 class x q3 1x
 q3 style x q3 1x
@@ -278,7 +278,7 @@ q3 b U q3 4U
 q3 abbr U q3 5U
 q3 strong U q3 6U
 q3 small U q3 7U
-q3 form N q3 sN
+q3 form N q3 uN
 q3 table C q3 oC
 q3 id o q3 1u
 q3 class o q3 1o
