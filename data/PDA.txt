@@ -285,6 +285,8 @@ q3 class o q3 1o
 q3 style o q3 1o
 q3 > o q3 O
 q3 /table O q3 e
+q3 table N q3 oN
+q3 table U q3 oU
 q3 tr O q3 pO
 q3 id p q3 1p
 q3 class p q3 1p
@@ -346,7 +348,7 @@ q3 TEXT ] q3 ]
 q3 id 5 q3 15
 q3 class 5 q3 15
 q3 style 5 q3 15
-q3 > ? q3 {
+q3 > 5 q3 {
 q3 TEXT { q3 {
 q3 id 6 q3 16
 q3 class 6 q3 16

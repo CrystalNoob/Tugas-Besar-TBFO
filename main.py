@@ -20,12 +20,15 @@ class PDAProcessor:
         self.current_state = [] # save current state of PDA
     
     def print_html_file(self):
+        print("===================================================================")
         for line in self.each_line:
             print(line)
+        print("===================================================================")
         print()
         print_with_color("Syntax accepted",92)
         print()
         print(f"Lines : {len(self.each_line)}")
+        print()
 
 
     def accpet_by_empty(self,state,language, stack):
@@ -84,8 +87,7 @@ class PDAProcessor:
 
         possible_moves = self.get_moves(state, language, stack)
         if not possible_moves and len(language) != 0:
-            print(f"Failed at State: {state} with Input: {language} and Stack: {stack}")
-            print()
+            
             self.failed_state = [state,language,stack]
             
             return False
@@ -121,11 +123,34 @@ class PDAProcessor:
 
     def check(self):
         if (self.failed_state != []): # if PDA fails, it will store its last state, input, and stack at the failed_state property
+            print("Fail !")
+            print()
+            print("Possible error: ")
+            print("===================================================================")
+            print()
+            # print()
+            for line in self.each_line[0:self.curr_line-1]:
+                print(line)
+                
+            print_with_color(self.each_line[self.curr_line-1],91)
+            print()
+            if (len(self.each_line[self.curr_line:]) > 5):
+                for line in self.each_line[self.curr_line:self.curr_line+4]:
+                    print(line)
+                print("......")
+            else:
+                for line in self.each_line[self.curr_line:]:
+                    print(line)
+            print("===================================================================")
+            print()
             print_with_color("Syntax Error",91)
+            print()
             print()
             print(f"Failed at line {self.curr_line} : {self.each_line[self.curr_line-1].strip()}")
             print()
             if (len(self.failed_state[2]) >0):
+                print(f"Failed at State: {self.failed_state[0]} with Input: {self.failed_state[1]} and Stack: {self.failed_state[2]}")
+                print()
                 print("Possible transitions: ")
                 # print out all possible fix :
                 current_state = self.failed_state[0]
@@ -144,22 +169,6 @@ class PDAProcessor:
                 print(possible_next_inputs)
                 print()
 
-            print("Possible error: ")
-            # print()
-            for line in self.each_line[0:self.curr_line-1]:
-                print(line)
-                
-            print_with_color(self.each_line[self.curr_line-1],91)
-            print()
-            if (len(self.each_line[self.curr_line:]) > 5):
-                for line in self.each_line[self.curr_line:self.curr_line+4]:
-                    print(line)
-                print("......")
-            else:
-                for line in self.each_line[self.curr_line:]:
-                    print(line)
-            print()
-
             
             
         elif (self.current_state == []):
@@ -170,6 +179,7 @@ class PDAProcessor:
                 print("Your HTML file:")
                 print()
                 self.print_html_file()
+
             else :
                 print("Syntax Error")
                 print("Possible reason : Empty file")
