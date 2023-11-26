@@ -139,53 +139,53 @@ class PDAProcessor:
             print(possible_next_inputs)
             print()
 
-            print("Possible error: ")
-            print()
-            # for line in self.each_line[0:self.curr_line]:
-            #     print(line)
-            token_of_a_line = tokenization_for_a_line(self.each_line[self.curr_line-1])
+            # print("Possible error: ")
+            # print()
+            # # for line in self.each_line[0:self.curr_line]:
+            # #     print(line)
+            # token_of_a_line = tokenization_for_a_line(self.each_line[self.curr_line-1])
+            # # print(token_of_a_line)
+            # # print(self.failed_state[1])
+            # # print(token_of_a_line)
+            # matrix_tokens = []
+            # matrix_tokens_each_line = []
             # print(token_of_a_line)
+            # for part in token_of_a_line:
+            #     if (part.isspace()):
+            #         matrix_tokens.append(part)
+            #     else:
+            #         matrix_tokens.extend(tokenization(part))
+            #     matrix_tokens_each_line.append(tokenization(part))
+            # print(matrix_tokens_each_line)
+            # # print(matrix_tokens)
+            # print("failed state =")
             # print(self.failed_state[1])
-            # print(token_of_a_line)
-            matrix_tokens = []
-            matrix_tokens_each_line = []
-            print(token_of_a_line)
-            for part in token_of_a_line:
-                if (part.isspace()):
-                    matrix_tokens.append(part)
-                else:
-                    matrix_tokens.extend(tokenization(part))
-                matrix_tokens_each_line.append(tokenization(part))
-            print(matrix_tokens_each_line)
+            # print("matriks token: ")
             # print(matrix_tokens)
-            print("failed state =")
-            print(self.failed_state[1])
-            print("matriks token: ")
-            print(matrix_tokens)
 
-            len_to_travers = abs(len(matrix_tokens) - len(self.failed_state[1]))
-            for i in range(len_to_travers +1):
-                print(token_of_a_line[i],end='')
+            # len_to_travers = abs(len(matrix_tokens) - len(self.failed_state[1]))
+            # for i in range(len_to_travers +1):
+            #     print(token_of_a_line[i],end='')
             
 
 
 
-            # for i in range(len_to_travers)
+            # # for i in range(len_to_travers)
 
 
 
-            # for i in range(len(token_of_a_line)):
-            #     # print(self.failed_state[1])
-            #     # print(matrix_tokens[i])
-            #     if isSubArray(self.failed_state[1], matrix_tokens[i]):
-            #         print_with_color(token_of_a_line[i],91)
+            # # for i in range(len(token_of_a_line)):
+            # #     # print(self.failed_state[1])
+            # #     # print(matrix_tokens[i])
+            # #     if isSubArray(self.failed_state[1], matrix_tokens[i]):
+            # #         print_with_color(token_of_a_line[i],91)
                         
-            #     else:
-            #         print(token_of_a_line[i],end='')
-            print()
-            # for line in self.each_line[self.curr_line:]:
-            #     print(line)
-            print()
+            # #     else:
+            # #         print(token_of_a_line[i],end='')
+            # print()
+            # # for line in self.each_line[self.curr_line:]:
+            # #     print(line)
+            # print()
             
 
         elif (self.current_state == []):
