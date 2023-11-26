@@ -26,6 +26,7 @@ class PDAProcessor:
         print()
 
     def accpet_by_empty(self,state,language, stack):
+        
         if len(language) != 0:
             return 0
         # elif (self.type_accept == "E"):
@@ -71,7 +72,7 @@ class PDAProcessor:
 
     def isAccepted(self, state, language, stack, config):
         # self.display_state(state, language, stack)  # Display current state
-
+        
         if self.state_found:
             return False
         if self.accpet_by_empty(state, language, stack):
@@ -120,35 +121,42 @@ class PDAProcessor:
             print("Syntax Error")
             print(f"Failed at line {self.curr_line} : {self.each_line[self.curr_line-1].strip()}")
             print()
-            print("Possible transitions: ")
-            # print out all possible fix :
-            current_state = self.failed_state[0]
-            current_top_stack = self.failed_state[2][0]
-            current_first_input = self.failed_state[1][0]
-            possible_transitions = []
-            possible_next_inputs = []
-            possible_outcomes = self.productions[current_state]
-            for transition in possible_outcomes:
-                if (current_top_stack == transition[1]):
-                    possible_transitions.append(transition)
-                    possible_next_inputs.append(transition[0])
-            print(possible_transitions)
-            print()
+            if (len(self.failed_state[2]) >0):
+                print("Possible transitions: ")
+                # print out all possible fix :
+                current_state = self.failed_state[0]
+                current_top_stack = self.failed_state[2][0]
+                possible_transitions = []
+                possible_next_inputs = []
+                possible_outcomes = self.productions[current_state]
+                for transition in possible_outcomes:
+                    if (current_top_stack == transition[1]):
+                        possible_transitions.append(transition)
+                        possible_next_inputs.append(transition[0])
+                print(possible_transitions)
+                print()
 
-            print("Expected next inputs : ")
-            print(possible_next_inputs)
-            print()
+                print("Expected next inputs : ")
+                print(possible_next_inputs)
+                print()
 
-            # print("Possible error: ")
+            print("Possible error: ")
             # print()
-            # # for line in self.each_line[0:self.curr_line]:
-            # #     print(line)
+            for line in self.each_line[0:self.curr_line-1]:
+                print(line)
+                
+            print_with_color(self.each_line[self.curr_line-1],91)
+            print()
+            for line in self.each_line[self.curr_line+1:]:
+                print(line)
             # token_of_a_line = tokenization_for_a_line(self.each_line[self.curr_line-1])
             # # print(token_of_a_line)
             # # print(self.failed_state[1])
             # # print(token_of_a_line)
             # matrix_tokens = []
             # matrix_tokens_each_line = []
+            # matrix_tokens_each_line_length = []
+         
             # print(token_of_a_line)
             # for part in token_of_a_line:
             #     if (part.isspace()):
@@ -157,6 +165,11 @@ class PDAProcessor:
             #         matrix_tokens.extend(tokenization(part))
             #     matrix_tokens_each_line.append(tokenization(part))
             # print(matrix_tokens_each_line)
+            # for i in matrix_tokens_each_line:
+            #     matrix_tokens_each_line_length.append(len(i))
+    
+            # print("the length : ")
+            # print(matrix_tokens_each_line_length)
             # # print(matrix_tokens)
             # print("failed state =")
             # print(self.failed_state[1])
@@ -164,6 +177,10 @@ class PDAProcessor:
             # print(matrix_tokens)
 
             # len_to_travers = abs(len(matrix_tokens) - len(self.failed_state[1]))
+            # print(len_to_travers)
+            # curr_len = 0
+            # id_to_traverse = 0
+
             # for i in range(len_to_travers +1):
             #     print(token_of_a_line[i],end='')
             
@@ -185,7 +202,7 @@ class PDAProcessor:
             # print()
             # # for line in self.each_line[self.curr_line:]:
             # #     print(line)
-            # print()
+
             
 
         elif (self.current_state == []):
@@ -214,8 +231,6 @@ class PDAProcessor:
         else:
             print("Syntax Error")
         
-
-
     def string_to_one_line(self):
         lst=list(self.language)
         str=''
@@ -243,7 +258,7 @@ class PDAProcessor:
             if (sys.argv[1].endswith(('.txt'))):
                 path_to_text = path_to_data + sys.argv[1]
             else:
-                print("File is not txt")
+                print("PDA File needs to be txt")
                 sys.exit(1)
         else:
             print("File doesn't exist")
@@ -261,6 +276,7 @@ class PDAProcessor:
 
         with open(path_to_html, 'r', encoding='utf-8') as html_file:
             html_content = html_file.read()
+        html_content = normalize_html_file_content(html_content)
 
         self.language = html_content
         if (len(self.language) != 0):
@@ -278,13 +294,14 @@ class PDAProcessor:
         print("  EEEE Y   Y  FFFFF")
         print("  E     Y Y   F")
         print("  EEE    Y    FFFF")
-        print("  E     Y Y   F")
-        print("  EEEE  Y Y   F")
+        print("  E      Y    F")
+        print("  EEEE   Y    F")
         print()
         print("HTML SYNTAX CHECKER")
 
         # print("PDA produciton rules  : ")
         # print(self.productions)
+        print()
         print()
         print("PDA tokens : ")
         print(self.language)
@@ -297,9 +314,13 @@ class PDAProcessor:
             if (arr_tokens != []): # possible space
                 if (self.failed_state == []):
                     
-                    if (self.curr_line == 1):
+                    if (self.curr_line == 1 or self.current_state == []):
+                        # print(self.current_state)
                         self.isAccepted(self.start_state,arr_tokens,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
+           
                     else:
+                        # print(self.current_state)
+                        
                         self.isAccepted(self.current_state[0],arr_tokens,self.current_state[2],[self.current_state[2],arr_tokens,self.current_state])
                 else:
                     break

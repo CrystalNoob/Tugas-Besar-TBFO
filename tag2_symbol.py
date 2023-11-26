@@ -1,11 +1,21 @@
 
 
-from bs4 import BeautifulSoup
 from colorama import Fore, Style
 import re
 from miscellaneous import*
 
+def replace_equals(match):
+    inside_quotes = match.group(1)
+    replaced_inside_quotes = inside_quotes.replace('=', 'X')
+    return f'="{replaced_inside_quotes}"'
 
+
+def normalize_html_file_content(html_content):
+
+    pattern = re.compile(r"(<[^>]+)\n\s+")
+    while pattern.search(html_content):
+        html_content = pattern.sub(lambda m: m.group(1) + " ", html_content)
+    return html_content
 
 def squish_space(match):
     return f'{match.group(1)}="{match.group(2)}"'.replace(" ", "")
@@ -27,8 +37,11 @@ def remove_space_in_string(html_string):
     return html_string
 
 def get_attributes(html_string):
+  
+    print(html_string)
     tag_pattern = r"<(\w+)([^>]*)>"
-    attr_pattern = r"(\w+)='([^']*)'|(\w+)=\"([^\"]*)\"" 
+    attr_pattern = r'(\w+)="([^"]*)"'
+
     matches = re.finditer(tag_pattern, html_string)
     return_values = []
 
@@ -57,7 +70,7 @@ def tokenization(html_content):
     tokens = re.findall(r'<[^>]+>|[^<]+', tokens)
     
     for token in tokens:
-        if (token != ""  and not (token.isspace())):
+        if (not (token.isspace())):
             final_tokens.append(token)
     # tokens = remove_content(tokens)
     for token in final_tokens:
@@ -65,6 +78,9 @@ def tokenization(html_content):
     return final_result
 
 def extract_tag_info(html_tag):
+    pattern = r'="([^"]*)"'
+    html_tag = re.sub(pattern, replace_equals, html_tag)
+    
     html_tag = squish_value(html_tag)
     # print(html_tag)
     # <!---->
