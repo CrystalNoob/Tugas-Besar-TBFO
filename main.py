@@ -15,13 +15,20 @@ class PDAProcessor:
         self.final_states = []
         self.type_accept = ""
         self.productions = {}
+        self.each_line = []
+        self.language_per_line  = []
+        self.failed_state = []
+        self.curr_line = 0
+        self.current_state = []
 
     def accpet_by_empty(self,state,language, stack):
         if len(language) != 0:
             return 0
-        elif (self.type_accept == "E"):
-            return len(stack) < 1 # language sudah kosong dan stack sudah kosong
-        return state in self.final_states
+        # elif (self.type_accept == "E"):
+        #     return len(stack) < 1 # language sudah kosong dan stack sudah kosong
+        else:
+            self.current_state = [state,language,stack]
+        # return state in self.final_states
     
     def get_moves(self, state, input_str, stack):
         moves = []
@@ -31,18 +38,18 @@ class PDAProcessor:
                 continue
 
             for j in self.productions[product]:
-                current = j
-                new = [j[2]]
+                current = j # current state
+                new = [j[2]] # possible next state
 
-                if current[0] :
-                    if input_str and input_str[0] == current[0]:
+                if current[0] : # if input is not epsilon
+                    if input_str and input_str[0] == current[0]: # if input string is not empty and current input is the same as input in productions (transition function)
                         new.append(input_str[1:])
                     else:
                         continue
-                else:
+                else: # if input is epsilon
                     new.append(input_str)
 
-                if current[1]:
+                if current[1]: # check if top of stack is the same as in productions
                     if stack and stack[0] == current[1]:
                         new.append(current[3] + stack[1:])
                     else:
@@ -50,7 +57,8 @@ class PDAProcessor:
                 else:
                     new.append(current[3] + stack)
 
-                moves.append(new)
+                moves.append(new)  # consist of current sate and remaining input, as well as the new top of the stack
+                
 
         return moves
 
@@ -58,7 +66,7 @@ class PDAProcessor:
         print(f"Current State: {state}, Remaining Input: {language}, Stack: {stack}")
 
     def isAccepted(self, state, language, stack, config):
-        self.display_state(state, language, stack)  # Display current state
+        # self.display_state(state, language, stack)  # Display current state
 
         if self.state_found:
             return False
@@ -67,8 +75,10 @@ class PDAProcessor:
             return True
 
         possible_moves = self.get_moves(state, language, stack)
-        if not possible_moves:
+        if not possible_moves and len(language) != 0:
             print(f"Failed at State: {state} with Input: {language} and Stack: {stack}")
+            self.failed_state = [state,language,stack]
+            
             return False
 
         for move in possible_moves:
@@ -101,10 +111,24 @@ class PDAProcessor:
 
 
     def check(self):
-        if self.state_found:
-            print("Diterima")
+        if (self.failed_state != []):
+            print("gagal pada line : ",self.curr_line)
+            print(self.each_line[self.curr_line-1].strip())
+            # print(self.each_line)
+        elif (self.current_state == []):
+
+            if (self.type_accept == "E"):
+                print("Success")
+            else :
+                print("Fail")
+                print("Possible reason : Empty file")
+        elif (self.current_state[1] == [] and len(self.current_state[2] ) < 1 and self.type_accept == "E"):
+            print("Berhasil !")
+        elif (self.current_state[1] == [] and (self.current_state[0] in self.final_states)):
+            print("Berhasil! ")
         else:
-            print("Tidak diterima")
+            print("Tidak berhasil")
+        
 
 
     def string_to_one_line(self):
@@ -115,6 +139,7 @@ class PDAProcessor:
             lst1=str.split("\n")
             str1=""
 
+        self.each_line = lst1
         for i in lst1:
             str1+=i+" "
             str2=str1[:-1]
@@ -159,10 +184,35 @@ class PDAProcessor:
 
         self.read_file_pda(path_to_text)
         self.language = tokenization(self.language)
-        print(self.language)
+        for line in self.each_line:
+            self.language_per_line.append(tokenization(line))
+        # print(self.language_per_line)
+    
+        # print(self.language)
+        print("PDA produciton rules  : ")
         print(self.productions)
-        self.isAccepted(self.start_state,self.language,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
+        print("PDA tokens : ")
+        print(self.language)
+        print("Processing.......")
+        # print(self.language_per_line)
+        for arr_tokens in self.language_per_line:
+            if (self.failed_state == []):
+                self.curr_line += 1
+            if (arr_tokens != []): # possible space
+                if (self.failed_state == []):
+                    
+                    if (self.curr_line == 1):
+                        self.isAccepted(self.start_state,arr_tokens,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
+                    else:
+                        self.isAccepted(self.current_state[0],arr_tokens,self.current_state[2],[self.current_state[2],arr_tokens,self.current_state])
+                else:
+                    break
         self.check()
+
+
+
+        
+        # self.check()
 
 k = PDAProcessor()
 k.run()

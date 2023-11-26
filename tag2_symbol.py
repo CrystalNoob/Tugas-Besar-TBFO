@@ -13,23 +13,6 @@ def squish_value(html_code):
     modified_html = re.sub(pattern, squish_space, html_code)
     return modified_html
 
-def is_html_tag(tag):
-    # Define a regular expression pattern for HTML tags
-    pattern = re.compile(r'^<([a-zA-Z][^\s>]*)\s*[^>]*>$|^</([a-zA-Z][^\s>]*)\s*>$')
-    match = pattern.match(tag)
-    return bool(match)
-    
-def is_void_element(tag):
-    # Define a regular expression pattern for void HTML elements
-    pattern = re.compile(r'^<([a-zA-Z][^\s>]*)\s*[^>]*(?<!/)>$')
-    
-    # Use the pattern to match the tag
-    match = pattern.match(tag)
-    
-    # Return True if it's a match, otherwise False
-    return bool(match)
-
-
 def remove_space(tag):
     tag = re.sub(r'\s+', ' ', tag) # replace with single space
     tag = re.sub(r'\s*=\s*', '=', tag) # handle equals
@@ -159,4 +142,21 @@ def extract_tag_info(html_tag):
             return hasil
         else:
             return ["TEXT"]
+        
+
+def tokenization_for_text(html_content):
+    # print(tokens)
+    final_tokens = []
+    final_result = []
+    
+    tokens = tokens.replace(" >", ">")
+    tokens = re.findall(r'<[^>]+>|[^<]+', tokens)
+    
+    for token in tokens:
+        if (token != ""  and not (token.isspace())):
+            final_tokens.append(token)
+    # tokens = remove_content(tokens)
+    for token in final_tokens:
+        final_result.extend(extract_tag_info(token))
+    return final_result
         
