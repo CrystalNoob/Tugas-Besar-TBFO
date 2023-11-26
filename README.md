@@ -46,8 +46,7 @@ Start developing in your favorite IDE.
 Additional steps for the developer to build the project after some code changes.
 
 ```shell
-cd ./src
-py PDA.py PDA.txt htmlFile.html
+py main.py PDA.txt htmlFile.html
 ```
 
 Here, py runs the PDA.py file and parse the PDA to check the htmlFile.
@@ -62,3 +61,5 @@ What's all the bells and whistles this project can perform?
 - [Tugas Pemrograman IF2124 Teori Bahasa Formal dan Otomata](https://docs.google.com/document/d/1W5QSSHVrXvArj3Aonw4FhbfctBK6J2YGefXpWsLW43Y/edit)
 - [Repository](https://github.com/CrystalNoob/Tugas-Besar-TBFO)
 - [Laporan Tugas Besar [email std]](https://docs.google.com/document/d/1BMXj_jpofB1vJbdooLsHa3aDacjD5mSNYYTZocM_rF0/edit)
+- [Diagram PDA](https://www.figma.com/file/4PwujSGJVT1hRkg9xEyco1/PDA-Diagram-HTML-EYF?type=whiteboard&node-id=0-1&t=XUFgDX8i28xRLZXx-0)
+- [Spreadsheet PDA](https://docs.google.com/spreadsheets/d/15O7XWvdYpQuFBia7w2uVTHNjthilNHSGM8zhh7tzSo4/edit?usp=sharing)
