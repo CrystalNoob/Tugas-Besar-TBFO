@@ -54,45 +54,8 @@ class PDAProcessor:
 
         return moves
 
-    # def isAccepted(self,state,language,stack,config):
-    #     total_in_stack = 0
-
-    #     if self.state_found:
-    #         return 0
-    #     if self.accpet_by_empty(state,language,stack):
-    #         self.state_found = 1
-    #         return 1
-    #     total_curr_move = self.get_moves(state, language, stack)
-    #     if (total_curr_move == 0 ):
-    #         return 0
-    #     for move in total_curr_move:
-    #         total_in_stack += self.isAccepted(move[0], move[1], move[2], config + [(move[0], move[1], move[2])])
-    #     return total_in_stack
-
     def display_state(self, state, language, stack):
         print(f"Current State: {state}, Remaining Input: {language}, Stack: {stack}")
-
-    # def isAccepted(self, state, language, stack, config):
-    #     self.display_state(state, language, stack)  # Display current state
-
-    #     if self.state_found:
-    #         return 0
-    #     if self.accpet_by_empty(state, language, stack):
-    #         self.state_found = 1
-    #         return 1
-
-    #     total_curr_move = self.get_moves(state, language, stack)
-    #     if total_curr_move == 0:
-    #         print(f"Failed at State: {state} with Input: {language} and Stack: {stack}")
-    #         return 0
-
-    #     total_in_stack = 0
-    #     for move in total_curr_move:
-    #         total_in_stack += self.isAccepted(move[0], move[1], move[2], config + [(move[0], move[1], move[2])])
-
-    #     if total_in_stack == 0:
-    #         print(f"Failed to find a valid move from State: {state} with Input: {language} and Stack: {stack}")
-    #     return total_in_stack
 
     def isAccepted(self, state, language, stack, config):
         self.display_state(state, language, stack)  # Display current state
@@ -192,19 +155,11 @@ class PDAProcessor:
         self.language = html_content
         if (len(self.language) != 0):
             self.string_to_one_line() # jika ingin file dalam one line
-        # with open("./data/html_in_text.txt","w") as f:
-        #     f.write(self.language)
 
 
         self.read_file_pda(path_to_text)
-        # print(self.language)
-        # print(self.language)
         self.language = tokenization(self.language)
         print(self.language)
-        # self.language = ['head','head','head','head','head','head']
-        # self.language = ['TEXT','TEXT']
-        # print(self.language)
-        # self.transform_html_to_txt()
         print(self.productions)
         self.isAccepted(self.start_state,self.language,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
         self.check()
