@@ -23,6 +23,9 @@ class PDAProcessor:
         for line in self.each_line:
             print(line)
         print()
+        print("Syntax accepted")
+        print(f"Lines : {len(self.each_line)}")
+
 
     def accpet_by_empty(self,state,language, stack):
         
