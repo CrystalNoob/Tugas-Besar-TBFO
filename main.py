@@ -3,23 +3,27 @@ import sys
 import os
 from bs4 import BeautifulSoup
 from tag2_symbol import*
-import html2text
-
+from colorama import Fore, Style
 
 class PDAProcessor:
     def __init__(self):
-        self.language = ""
-        self.state_found = 0 
-        self.start_state = ""
-        self.stack_start_symbol = ""
-        self.final_states = []
-        self.type_accept = ""
-        self.productions = {}
-        self.each_line = []
-        self.language_per_line  = []
-        self.failed_state = []
-        self.curr_line = 0
-        self.current_state = []
+        self.language = "" # language as one string, irrelevent after last update (to fufill bonus, I have decided to use an array of array of tokens rather than a string of tokens)
+        self.state_found = 0 # save PDA's current state, 0 for non-accepted language, 1 for accepted language, irrelevant after last update (to fufill bonus, I will check whether or not a language is accpeted by using the failed_state property)
+        self.start_state = "" # save start state
+        self.stack_start_symbol = "" # save start stack symbol
+        self.final_states = [] # save final states of PDA
+        self.type_accept = "" # save PDA type of acceptence, F for final state, E for empty stack
+        self.productions = {} # save PDA productions
+        self.each_line = [] # store each line of html string (not edited, split with \n)
+        self.language_per_line  = [] # matrix data structure, array of array of tokens, each element of matrix corresponds to the tokens of a particular line.
+        self.failed_state = [] # save the state, input, and stack when PDA fails, 
+        self.curr_line = 0 # save how many lines PDA have checked, stops increment when PDA fails
+        self.current_state = [] # save current state of PDA
+    
+    def print_html_file(self):
+        for line in self.each_line:
+            print(line)
+        print()
 
     def accpet_by_empty(self,state,language, stack):
         if len(language) != 0:
@@ -77,6 +81,7 @@ class PDAProcessor:
         possible_moves = self.get_moves(state, language, stack)
         if not possible_moves and len(language) != 0:
             print(f"Failed at State: {state} with Input: {language} and Stack: {stack}")
+            print()
             self.failed_state = [state,language,stack]
             
             return False
@@ -111,23 +116,103 @@ class PDAProcessor:
 
 
     def check(self):
-        if (self.failed_state != []):
-            print("gagal pada line : ",self.curr_line)
-            print(self.each_line[self.curr_line-1].strip())
-            # print(self.each_line)
+        if (self.failed_state != []): # if PDA fails, it will store its last state, input, and stack at the failed_state property
+            print("Syntax Error")
+            print(f"Failed at line {self.curr_line} : {self.each_line[self.curr_line-1].strip()}")
+            print()
+            print("Possible transitions: ")
+            # print out all possible fix :
+            current_state = self.failed_state[0]
+            current_top_stack = self.failed_state[2][0]
+            current_first_input = self.failed_state[1][0]
+            possible_transitions = []
+            possible_next_inputs = []
+            possible_outcomes = self.productions[current_state]
+            for transition in possible_outcomes:
+                if (current_top_stack == transition[1]):
+                    possible_transitions.append(transition)
+                    possible_next_inputs.append(transition[0])
+            print(possible_transitions)
+            print()
+
+            print("Expected next inputs : ")
+            print(possible_next_inputs)
+            print()
+
+            print("Possible error: ")
+            print()
+            # for line in self.each_line[0:self.curr_line]:
+            #     print(line)
+            token_of_a_line = tokenization_for_a_line(self.each_line[self.curr_line-1])
+            # print(token_of_a_line)
+            # print(self.failed_state[1])
+            # print(token_of_a_line)
+            matrix_tokens = []
+            matrix_tokens_each_line = []
+            print(token_of_a_line)
+            for part in token_of_a_line:
+                if (part.isspace()):
+                    matrix_tokens.append(part)
+                else:
+                    matrix_tokens.extend(tokenization(part))
+                matrix_tokens_each_line.append(tokenization(part))
+            print(matrix_tokens_each_line)
+            # print(matrix_tokens)
+            print("failed state =")
+            print(self.failed_state[1])
+            print("matriks token: ")
+            print(matrix_tokens)
+
+            len_to_travers = abs(len(matrix_tokens) - len(self.failed_state[1]))
+            for i in range(len_to_travers +1):
+                print(token_of_a_line[i],end='')
+            
+
+
+
+            # for i in range(len_to_travers)
+
+
+
+            # for i in range(len(token_of_a_line)):
+            #     # print(self.failed_state[1])
+            #     # print(matrix_tokens[i])
+            #     if isSubArray(self.failed_state[1], matrix_tokens[i]):
+            #         print_with_color(token_of_a_line[i],91)
+                        
+            #     else:
+            #         print(token_of_a_line[i],end='')
+            print()
+            # for line in self.each_line[self.curr_line:]:
+            #     print(line)
+            print()
+            
+
         elif (self.current_state == []):
 
             if (self.type_accept == "E"):
-                print("Success")
+                print("Accepted")
+                print()
+                print("Your HTML file:")
+                print()
+                self.print_html_file()
             else :
-                print("Fail")
+                print("Syntax Error")
                 print("Possible reason : Empty file")
         elif (self.current_state[1] == [] and len(self.current_state[2] ) < 1 and self.type_accept == "E"):
-            print("Berhasil !")
+            print("Accepted")
+            print()
+            print("Your HTML file:")
+            print()
+            self.print_html_file()
         elif (self.current_state[1] == [] and (self.current_state[0] in self.final_states)):
-            print("Berhasil! ")
+            print("Accepted")
+            print()
+            print("Your HTML file:")
+            print()
+            self.print_html_file()
         else:
-            print("Tidak berhasil")
+            print("Syntax Error")
         
 
 
@@ -189,10 +274,21 @@ class PDAProcessor:
         # print(self.language_per_line)
     
         # print(self.language)
-        print("PDA produciton rules  : ")
-        print(self.productions)
+        print()
+        print("  EEEE Y   Y  FFFFF")
+        print("  E     Y Y   F")
+        print("  EEE    Y    FFFF")
+        print("  E     Y Y   F")
+        print("  EEEE  Y Y   F")
+        print()
+        print("HTML SYNTAX CHECKER")
+
+        # print("PDA produciton rules  : ")
+        # print(self.productions)
+        print()
         print("PDA tokens : ")
         print(self.language)
+        print()
         print("Processing.......")
         # print(self.language_per_line)
         for arr_tokens in self.language_per_line:

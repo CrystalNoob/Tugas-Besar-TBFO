@@ -1,7 +1,10 @@
 
 
 from bs4 import BeautifulSoup
+from colorama import Fore, Style
 import re
+from miscellaneous import*
+
 
 
 def squish_space(match):
@@ -144,19 +147,18 @@ def extract_tag_info(html_tag):
             return ["TEXT"]
         
 
-def tokenization_for_text(html_content):
+def tokenization_for_a_line(html_content):
+    tokens = tokens = remove_space_in_string(html_content)
     # print(tokens)
     final_tokens = []
     final_result = []
     
-    tokens = tokens.replace(" >", ">")
+    tokens = tokens.replace(" >", ">") # get rid of final space behind closing tags (space that remove_space_in_string didn't handle)
     tokens = re.findall(r'<[^>]+>|[^<]+', tokens)
     
     for token in tokens:
-        if (token != ""  and not (token.isspace())):
-            final_tokens.append(token)
+        final_tokens.append(token)
     # tokens = remove_content(tokens)
-    for token in final_tokens:
-        final_result.extend(extract_tag_info(token))
-    return final_result
-        
+
+    return final_tokens
+
