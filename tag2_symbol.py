@@ -36,30 +36,6 @@ def remove_space_in_string(html_string):
     html_string = re.sub(r'<[^>]+>', lambda match: remove_space(match.group()), html_string)
     return html_string
 
-def get_attributes(html_string):
-  
-    print(html_string)
-    tag_pattern = r"<(\w+)([^>]*)>"
-    attr_pattern = r'(\w+)="([^"]*)"'
-
-    matches = re.finditer(tag_pattern, html_string)
-    return_values = []
-
-    for match in matches:
-        tag_name = match.group(1)
-        attributes = match.group(2)
-
-        for attr_match in re.finditer(attr_pattern, attributes):
-            attr_name = attr_match.group(1)
-            attr_value = attr_match.group(2).strip('\'"') if attr_match.group(2) else None
-
-            return_values.append((tag_name, attr_name, attr_value))
-    print(return_values)
-
-    return return_values
-        
-    # return return_values
-
 def tokenization(html_content):
     tokens = remove_space_in_string(html_content)
     # print(tokens)
@@ -79,7 +55,7 @@ def tokenization(html_content):
 
 def extract_tag_info(html_tag):
     pattern = r'="([^"]*)"'
-    html_tag = re.sub(pattern, replace_equals, html_tag)
+    html_tag = re.sub(pattern, replace_equals, html_tag) # handle equal sign inside value
     
     html_tag = squish_value(html_tag)
     # print(html_tag)

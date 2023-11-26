@@ -1,7 +1,6 @@
 
 import sys
 import os
-from bs4 import BeautifulSoup
 from tag2_symbol import*
 from colorama import Fore, Style
 
@@ -147,64 +146,9 @@ class PDAProcessor:
                 
             print_with_color(self.each_line[self.curr_line-1],91)
             print()
-            for line in self.each_line[self.curr_line+1:]:
+            for line in self.each_line[self.curr_line:]:
                 print(line)
-            # token_of_a_line = tokenization_for_a_line(self.each_line[self.curr_line-1])
-            # # print(token_of_a_line)
-            # # print(self.failed_state[1])
-            # # print(token_of_a_line)
-            # matrix_tokens = []
-            # matrix_tokens_each_line = []
-            # matrix_tokens_each_line_length = []
-         
-            # print(token_of_a_line)
-            # for part in token_of_a_line:
-            #     if (part.isspace()):
-            #         matrix_tokens.append(part)
-            #     else:
-            #         matrix_tokens.extend(tokenization(part))
-            #     matrix_tokens_each_line.append(tokenization(part))
-            # print(matrix_tokens_each_line)
-            # for i in matrix_tokens_each_line:
-            #     matrix_tokens_each_line_length.append(len(i))
-    
-            # print("the length : ")
-            # print(matrix_tokens_each_line_length)
-            # # print(matrix_tokens)
-            # print("failed state =")
-            # print(self.failed_state[1])
-            # print("matriks token: ")
-            # print(matrix_tokens)
-
-            # len_to_travers = abs(len(matrix_tokens) - len(self.failed_state[1]))
-            # print(len_to_travers)
-            # curr_len = 0
-            # id_to_traverse = 0
-
-            # for i in range(len_to_travers +1):
-            #     print(token_of_a_line[i],end='')
             
-
-
-
-            # # for i in range(len_to_travers)
-
-
-
-            # # for i in range(len(token_of_a_line)):
-            # #     # print(self.failed_state[1])
-            # #     # print(matrix_tokens[i])
-            # #     if isSubArray(self.failed_state[1], matrix_tokens[i]):
-            # #         print_with_color(token_of_a_line[i],91)
-                        
-            # #     else:
-            # #         print(token_of_a_line[i],end='')
-            # print()
-            # # for line in self.each_line[self.curr_line:]:
-            # #     print(line)
-
-            
-
         elif (self.current_state == []):
 
             if (self.type_accept == "E"):
@@ -287,9 +231,6 @@ class PDAProcessor:
         self.language = tokenization(self.language)
         for line in self.each_line:
             self.language_per_line.append(tokenization(line))
-        # print(self.language_per_line)
-    
-        # print(self.language)
         print()
         print("  EEEE Y   Y  FFFFF")
         print("  E     Y Y   F")
@@ -299,15 +240,13 @@ class PDAProcessor:
         print()
         print("HTML SYNTAX CHECKER")
 
-        # print("PDA produciton rules  : ")
-        # print(self.productions)
         print()
         print()
         print("PDA tokens : ")
         print(self.language)
         print()
         print("Processing.......")
-        # print(self.language_per_line)
+
         for arr_tokens in self.language_per_line:
             if (self.failed_state == []):
                 self.curr_line += 1
@@ -315,21 +254,14 @@ class PDAProcessor:
                 if (self.failed_state == []):
                     
                     if (self.curr_line == 1 or self.current_state == []):
-                        # print(self.current_state)
                         self.isAccepted(self.start_state,arr_tokens,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
            
                     else:
-                        # print(self.current_state)
-                        
                         self.isAccepted(self.current_state[0],arr_tokens,self.current_state[2],[self.current_state[2],arr_tokens,self.current_state])
                 else:
                     break
         self.check()
 
 
-
-        
-        # self.check()
-
-k = PDAProcessor()
-k.run()
+PDA_html = PDAProcessor()
+PDA_html.run()
