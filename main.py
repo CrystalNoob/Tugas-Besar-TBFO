@@ -1,4 +1,3 @@
-
 import sys
 import os
 from tag2_symbol import*
@@ -30,9 +29,7 @@ class PDAProcessor:
         print(f"Lines : {len(self.each_line)}")
         print()
 
-
     def accpet_by_empty(self,state,language, stack):
-        
         if len(language) != 0:
             return 0
         # elif (self.type_accept == "E"):
@@ -43,7 +40,6 @@ class PDAProcessor:
     
     def get_moves(self, state, input_str, stack):
         moves = []
-
         for product in self.productions:
             if product != state:
                 continue
@@ -51,7 +47,6 @@ class PDAProcessor:
             for j in self.productions[product]:
                 current = j # current state
                 new = [j[2]] # possible next state
-
                 if current[0] : # if input is not epsilon
                     if input_str and input_str[0] == current[0]: # if input string is not empty and current input is the same as input in productions (transition function)
                         new.append(input_str[1:])
@@ -59,7 +54,6 @@ class PDAProcessor:
                         continue
                 else: # if input is epsilon
                     new.append(input_str)
-
                 if current[1]: # check if top of stack is the same as in productions
                     if stack and stack[0] == current[1]:
                         new.append(current[3] + stack[1:])
@@ -67,10 +61,7 @@ class PDAProcessor:
                         continue
                 else:
                     new.append(current[3] + stack)
-
                 moves.append(new)  # consist of current sate and remaining input, as well as the new top of the stack
-                
-
         return moves
 
     def display_state(self, state, language, stack):
@@ -87,16 +78,13 @@ class PDAProcessor:
 
         possible_moves = self.get_moves(state, language, stack)
         if not possible_moves and len(language) != 0:
-            
             self.failed_state = [state,language,stack]
-            
             return False
 
         for move in possible_moves:
             if not self.isAccepted(move[0], move[1], move[2], config + [(move[0], move[1], move[2])]):
                 # As soon as one path fails, return False to indicate the language is not accepted
                 return False
-
         return False  # If all paths fail, return False
 
     def read_file_pda(self,file_path):
@@ -119,7 +107,6 @@ class PDAProcessor:
 
             configuration2 = [tuple(production_input if production_input != "e" else "" for production_input in tup) for tup in configuration1]
             self.productions[key].extend(configuration2)
-
 
     def check(self):
         if (self.failed_state != []): # if PDA fails, it will store its last state, input, and stack at the failed_state property
@@ -164,22 +151,17 @@ class PDAProcessor:
                         possible_next_inputs.append(transition[0])
                 print(possible_transitions)
                 print()
-
                 print("Expected next inputs : ")
                 print(possible_next_inputs)
                 print()
 
-            
-            
         elif (self.current_state == []):
-
             if (self.type_accept == "E"):
                 print("Accepted")
                 print()
                 print("Your HTML file:")
                 print()
                 self.print_html_file()
-
             else :
                 print("Syntax Error")
                 print("Possible reason : Empty file")
@@ -249,7 +231,6 @@ class PDAProcessor:
         if (len(self.language) != 0):
             self.string_to_one_line() # jika ingin file dalam one line
 
-
         self.read_file_pda(path_to_text)
         self.language = tokenization(self.language)
         for line in self.each_line:
@@ -275,16 +256,13 @@ class PDAProcessor:
                 self.curr_line += 1
             if (arr_tokens != []): # possible space
                 if (self.failed_state == []):
-                    
                     if (self.curr_line == 1 or self.current_state == []):
                         self.isAccepted(self.start_state,arr_tokens,self.stack_start_symbol,[(self.stack_start_symbol,self.language,self.stack_start_symbol)])
-           
                     else:
                         self.isAccepted(self.current_state[0],arr_tokens,self.current_state[2],[self.current_state[2],arr_tokens,self.current_state])
                 else:
                     break
         self.check()
-
 
 PDA_html = PDAProcessor()
 PDA_html.run()

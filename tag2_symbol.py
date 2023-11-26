@@ -1,6 +1,3 @@
-
-
-from colorama import Fore, Style
 import re
 from miscellaneous import*
 
@@ -9,9 +6,7 @@ def replace_equals(match):
     replaced_inside_quotes = inside_quotes.replace('=', 'X')
     return f'="{replaced_inside_quotes}"'
 
-
 def normalize_html_file_content(html_content):
-
     pattern = re.compile(r"(<[^>]+)\n\s+")
     while pattern.search(html_content):
         html_content = pattern.sub(lambda m: m.group(1) + " ", html_content)
@@ -32,7 +27,6 @@ def remove_space(tag):
     return tag
 
 def remove_space_in_string(html_string):
-    
     html_string = re.sub(r'<[^>]+>', lambda match: remove_space(match.group()), html_string)
     return html_string
 
@@ -56,7 +50,6 @@ def tokenization(html_content):
 def extract_tag_info(html_tag):
     pattern = r'="([^"]*)"'
     html_tag = re.sub(pattern, replace_equals, html_tag) # handle equal sign inside value
-    
     html_tag = squish_value(html_tag)
     # print(html_tag)
     # <!---->
@@ -67,7 +60,6 @@ def extract_tag_info(html_tag):
     matches = re.match(pattern, html_tag)
     #[['class', '']]  ada equals no value
     #['class'] no equels
-
     
     if matches:
         tag_name = matches.group(1)
@@ -136,21 +128,18 @@ def extract_tag_info(html_tag):
                 
             return hasil
         else:
-            return ["TEXT"]
-        
+            return ["TEXT"]   
 
 def tokenization_for_a_line(html_content):
     tokens = tokens = remove_space_in_string(html_content)
     # print(tokens)
     final_tokens = []
     final_result = []
-    
+
     tokens = tokens.replace(" >", ">") # get rid of final space behind closing tags (space that remove_space_in_string didn't handle)
     tokens = re.findall(r'<[^>]+>|[^<]+', tokens)
     
     for token in tokens:
         final_tokens.append(token)
     # tokens = remove_content(tokens)
-
     return final_tokens
-
