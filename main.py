@@ -23,7 +23,8 @@ class PDAProcessor:
         for line in self.each_line:
             print(line)
         print()
-        print("Syntax accepted")
+        print_with_color("Syntax accepted",92)
+        print()
         print(f"Lines : {len(self.each_line)}")
 
 
@@ -120,7 +121,8 @@ class PDAProcessor:
 
     def check(self):
         if (self.failed_state != []): # if PDA fails, it will store its last state, input, and stack at the failed_state property
-            print("Syntax Error")
+            print_with_color("Syntax Error",91)
+            print()
             print(f"Failed at line {self.curr_line} : {self.each_line[self.curr_line-1].strip()}")
             print()
             if (len(self.failed_state[2]) >0):
