@@ -413,9 +413,9 @@ qlink TEXT 2 qlink e
 qlink href z qlink 1z
 qlink = 1 qlink 2
 qlink TEXT 2 qlink e
-qlink rel z q3 1z
-qlink = 1 qlink 2
-qlink TEXT 2 q3 e
+qlink rel z qlink 3z
+qlink = 3 qlink 4
+qlink TEXT 4 q3 e
 q3 id z q3 1z
 q3 = 1 q3 2
 q3 TEXT 2 q3 e
